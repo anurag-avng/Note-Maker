@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Text to Image Creator</title>
+<title>Telugu Notes Word Editor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700;800&family=Noto+Serif+Telugu:wght@400;600;700&family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -235,37 +235,98 @@ function downloadBlob(blob,name){
   const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);
 }
-function openImageForCopy(blob){
-  const u=URL.createObjectURL(blob),w=window.open('','_blank');
-  if(!w){downloadBlob(blob,'WhatsApp_Notes.png');alert('The image was saved as PNG. Open it and use Copy/Share.');return}
-  w.document.write('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Copy Notes Image</title><style>body{margin:0;background:#222;text-align:center;padding:12px;font-family:Arial}img{max-width:100%;height:auto;background:#fff}.hint{position:fixed;left:10px;right:10px;bottom:10px;background:#fff;padding:12px;border-radius:10px}</style></head><body><img id="i"><div class="hint">Press and hold the image → Copy or Share → WhatsApp</div></body></html>');
-  w.document.close(); w.document.getElementById('i').src=u;
-  setTimeout(()=>URL.revokeObjectURL(u),60000);
+async function openImageForCopy(blob){
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const dataUrl=reader.result;
+    const w=window.open('','_blank');
+    if(!w){
+      downloadBlob(blob,'WhatsApp_Notes.png');
+      alert('The image was saved as PNG. Open it and use Copy or Share.');
+      return;
+    }
+    w.document.write('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Copy Notes Image</title><style>body{margin:0;background:#222;text-align:center;padding:12px;font-family:Arial,sans-serif}img{max-width:100%;height:auto;background:#fff;display:block;margin:0 auto}.actions{position:sticky;bottom:0;margin:12px auto 0;max-width:500px;background:#fff;padding:12px;border-radius:12px;box-shadow:0 2px 15px #0005}.actions button{font-size:16px;padding:10px 14px;margin:4px;border:0;border-radius:8px}.hint{font-size:14px;margin-top:6px}</style></head><body><img id="i" alt="Generated notes image"><div class="actions"><button id="share">📤 Share Image</button><button id="copy">📋 Copy Image</button><div class="hint">On iPhone: press and hold the image → Copy or Share → WhatsApp.</div></div></body></html>');
+    w.document.close();
+    w.document.getElementById('i').src=dataUrl;
+    w.document.getElementById('copy').onclick=async()=>{
+      try{
+        const img=w.document.getElementById('i');
+        const r=await fetch(img.src); const b=await r.blob();
+        if(w.navigator.clipboard && w.ClipboardItem && w.isSecureContext){
+          await w.navigator.clipboard.write([new w.ClipboardItem({'image/png':b})]);
+          alert('Image copied. Open WhatsApp and paste it.');
+        }else alert('Press and hold the image → Copy.');
+      }catch(e){alert('Press and hold the image → Copy or Share → WhatsApp.');}
+    };
+    w.document.getElementById('share').onclick=async()=>{
+      try{
+        const r=await fetch(dataUrl); const b=await r.blob();
+        const f=new File([b],'Telugu_Notes.png',{type:'image/png'});
+        if(w.navigator.share){await w.navigator.share({files:[f],title:'Telugu Notes'});}
+        else alert('Use the browser Share button or press and hold the image.');
+      }catch(e){if(e.name!=='AbortError')alert('Press and hold the image → Share → WhatsApp.');}
+    };
+  };
+  reader.readAsDataURL(blob);
 }
 async function shareImage(){
   status('Creating image…');
   try{
-    const blob=await canvasToBlob(await canvasImage());
+    const canvas=await canvasImage();
+    const blob=await canvasToBlob(canvas);
     const file=new File([blob],'Telugu_Notes.png',{type:'image/png'});
-    if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
-      await navigator.share({files:[file],title:'Telugu Notes'}); status('✓ Share sheet opened'); return;
+
+    // iPhone/iPad and modern Android: use the native share sheet with the actual PNG file.
+    if(typeof navigator.share==='function'){
+      try{
+        await navigator.share({files:[file],title:'Telugu Notes',text:'Telugu Notes'});
+        status('✓ Image shared');
+        return;
+      }catch(e){
+        if(e && e.name==='AbortError'){status('Share cancelled');return;}
+        console.warn('File sharing failed:',e);
+      }
     }
-    openImageForCopy(blob); status('Image opened');
-  }catch(e){if(e.name!=='AbortError')alert('Could not create/share the image. Please try again.');status('Share cancelled/failed')}
+
+    // Desktop/unsupported browsers: show the generated image with simple Copy/Save actions.
+    openImageForCopy(blob);
+    status('Image opened — use Copy or Share');
+  }catch(e){
+    console.error(e);
+    alert('Could not create the image. Please reload the page and try again.');
+    status('Image creation failed');
+  }
 }
+
 async function copyImage(){
   status('Creating image…');
   try{
-    const blob=await canvasToBlob(await canvasImage());
+    const canvas=await canvasImage();
+    const blob=await canvasToBlob(canvas);
+
+    // Clipboard image support works only in browsers that expose ClipboardItem + secure context.
     if(navigator.clipboard && window.ClipboardItem && window.isSecureContext){
       try{
-        await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
-        status('✓ Image copied'); alert('✓ Image copied. Open WhatsApp and paste it.'); return;
-      }catch(e){console.warn('Clipboard write unavailable',e)}
+        const item=new ClipboardItem({'image/png':blob});
+        await navigator.clipboard.write([item]);
+        status('✓ Image copied');
+        alert('✓ Image copied. Open WhatsApp and paste it.');
+        return;
+      }catch(e){
+        console.warn('Direct image clipboard failed:',e);
+      }
     }
-    openImageForCopy(blob); status('Image opened — long-press Copy/Share');
-  }catch(e){console.error(e);alert('Could not create the image. If this is a local HTML file, use Share Image or PNG.');status('Image creation failed')}
+
+    // Reliable fallback: open the real PNG. On iPhone, press and hold → Copy or Share.
+    openImageForCopy(blob);
+    status('Image opened — press and hold to Copy/Share');
+  }catch(e){
+    console.error(e);
+    alert('Could not create the image. Please reload the page and try again.');
+    status('Image creation failed');
+  }
 }
+
 async function downloadPNG(){
   status('Creating PNG…');
   try{downloadBlob(await canvasToBlob(await canvasImage()),'Telugu_Notes.png');status('✓ PNG downloaded')}

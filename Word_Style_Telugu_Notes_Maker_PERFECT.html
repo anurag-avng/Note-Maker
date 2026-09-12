@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Telugu Notes Word Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;500;600;700;800&family=Noto+Serif+Telugu:wght@400;600;700&family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eef0f3;color:#202124;font-family:"Noto Sans",Arial,sans-serif}
+button,select,input{font:inherit}button{cursor:pointer}.top{height:48px;background:#fff;border-bottom:1px solid #d4d8de;display:flex;align-items:center;padding:0 12px;gap:10px;position:sticky;top:0;z-index:20}.logo{font-size:21px;font-weight:800;color:#185abd}.name{font-size:14px;color:#555}.topright{margin-left:auto;display:flex;gap:4px}.ico{border:0;background:transparent;padding:7px 9px;border-radius:5px}.ico:hover{background:#edf3ff}
+.tabs{height:40px;background:#fff;border-bottom:1px solid #d4d8de;display:flex;padding-left:8px;position:sticky;top:48px;z-index:19}.tab{border:0;background:#fff;padding:9px 15px;font-size:13px}.tab.active{color:#185abd;font-weight:700;border-bottom:3px solid #185abd}
+.ribbon{background:#fff;border-bottom:1px solid #cbd0d7;min-height:92px;padding:6px 8px;position:sticky;top:88px;z-index:18;overflow-x:auto}.row{display:flex;gap:5px;min-width:max-content}.group{position:relative;border-right:1px solid #e0e3e7;padding:0 8px 16px;display:flex;align-items:center;gap:4px}.group:last-child{border:0}.gt{position:absolute;bottom:1px;left:0;right:0;text-align:center;font-size:9px;color:#777}.b{border:1px solid transparent;background:#fff;border-radius:4px;min-width:31px;height:30px;padding:4px 7px;font-size:12px}.b:hover{background:#edf3ff;border-color:#c8d8f8}.big{height:55px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}.big .sym{font-size:17px}.sel{height:30px;border:1px solid #bfc5cc;border-radius:4px;background:#fff;padding:2px 6px;font-size:12px}.color{width:31px;height:30px;padding:2px;border:1px solid #bfc5cc;border-radius:4px;background:#fff}
+.workspace{display:flex;justify-content:center;padding:22px 12px 55px}.paper{width:min(794px,calc(100vw - 24px));min-height:1123px;background:#fff;box-shadow:0 2px 14px #0002;padding:76px 82px;position:relative;transition:.15s}.editor{min-height:970px;outline:0;font-family:"Noto Sans Telugu","Noto Sans",Arial,sans-serif;font-size:16px;line-height:1.5;word-break:break-word}.editor:empty:before{content:"Type your notes here… / మీ నోట్స్ ఇక్కడ టైప్ చేయండి…";color:#9aa0a6}.editor h1{font-size:30px;line-height:1.2;margin:0 0 14px}.editor h2{font-size:24px;line-height:1.25;margin:18px 0 9px}.editor h3{font-size:20px;line-height:1.3;margin:16px 0 8px}.editor h4{font-size:17px;margin:14px 0 7px}.editor p{margin:0 0 9px}.editor blockquote{margin:12px 0;padding:9px 14px;border-left:4px solid #185abd;background:#f3f6fb}.editor table{width:100%;border-collapse:collapse;margin:12px 0}.editor td,.editor th{border:1px solid #9299a3;padding:7px;min-width:50px}.editor img{max-width:100%;height:auto}.footer{position:fixed;bottom:0;left:0;right:0;height:32px;background:#fff;border-top:1px solid #d4d8de;display:flex;align-items:center;padding:0 10px;font-size:11px;color:#666;z-index:30}.footer .r{margin-left:auto}
+.hidden{display:none!important}.modal{position:fixed;inset:0;background:#0007;display:flex;align-items:center;justify-content:center;z-index:50}.box{background:#fff;padding:20px;border-radius:8px;width:min(420px,92vw);box-shadow:0 10px 35px #0004}.box input{width:100%;padding:9px;border:1px solid #bbb;border-radius:5px;margin:6px 0 12px}.box .actions{text-align:right}.primary{background:#185abd;color:#fff;border:0;padding:8px 14px;border-radius:5px}.secondary{background:#fff;border:1px solid #aaa;padding:8px 14px;border-radius:5px}
+.lined{background-image:linear-gradient(transparent 31px,#dce6f2 32px);background-size:100% 32px}.grid{background-image:linear-gradient(#e7ebf0 1px,transparent 1px),linear-gradient(90deg,#e7ebf0 1px,transparent 1px);background-size:24px 24px}.cornell{background:linear-gradient(90deg,transparent 0 24%,#dce4ee 24.2%,transparent 24.5%),linear-gradient(transparent 31px,#dce6f2 32px);background-size:100% 32px}.exam{background:#fffdf4}.soft{background:linear-gradient(135deg,#fff,#eef5ff)}.dark{background:#202124;color:#f1f3f4}.dark .editor{color:#f1f3f4}.ruler{display:none;height:20px;background:repeating-linear-gradient(90deg,#ddd 0 1px,transparent 1px 10px);border-bottom:1px solid #bbb}
+@media(max-width:650px){.paper{padding:45px 24px;min-height:900px}.editor{min-height:800px}.tab{padding:9px 11px}.b.big{min-width:48px}}
+@media print{@page{size:A4;margin:0}body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.top,.tabs,.ribbon,.footer,.ruler{display:none!important}.workspace{padding:0}.paper{width:100%;min-height:auto;box-shadow:none;margin:0;padding:76px 82px;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div class="top"><div class="logo">W</div><div class="name" id="docName">Telugu Notes Document</div><div class="topright"><button class="ico" onclick="newDoc()">＋</button><button class="ico" onclick="saveDoc()">💾</button><button class="ico" onclick="printDoc()">🖨️</button></div></div>
+
+<div class="tabs">
+<button class="tab active" data-tab="home">Home</button><button class="tab" data-tab="insert">Insert</button><button class="tab" data-tab="design">Design</button><button class="tab" data-tab="layout">Layout</button><button class="tab" data-tab="review">Review</button><button class="tab" data-tab="view">View</button>
+</div>
+
+<div class="ribbon">
+<div id="home" class="row">
+<div class="group"><button class="b big" onclick="newDoc()"><span class="sym">📄</span>New</button><button class="b big" onclick="saveDoc()"><span class="sym">💾</span>Save</button><button class="b big" onclick="openDoc()"><span class="sym">📂</span>Open</button><button class="b big" onclick="printDoc()"><span class="sym">🖨</span>Print</button><span class="gt">File</span></div>
+<div class="group"><button class="b" onclick="safeCmd('undo')">↶</button><button class="b" onclick="safeCmd('redo')">↷</button><button class="b" onclick="safeCmd('cut')">✂</button><button class="b" onclick="safeCmd('copy')">Copy</button><button class="b" onclick="pastePlain()">Paste</button><span class="gt">Clipboard</span></div>
+<div class="group">
+<select class="sel" id="font" onchange="setFont(this.value)"><option value="Noto Sans Telugu">Noto Sans Telugu</option><option value="Noto Serif Telugu">Noto Serif Telugu</option><option value="Noto Sans">Noto Sans</option><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Times New Roman">Times New Roman</option></select>
+<select class="sel" id="size" onchange="setSize(this.value)"><option>10px</option><option>11px</option><option selected>12px</option><option>14px</option><option>16px</option><option>18px</option><option>20px</option><option>24px</option><option>28px</option><option>32px</option><option>36px</option><option>40px</option><option>48px</option><option>60px</option></select>
+<button class="b" onclick="safeCmd('bold')"><b>B</b></button><button class="b" onclick="safeCmd('italic')"><i>I</i></button><button class="b" onclick="safeCmd('underline')"><u>U</u></button><button class="b" onclick="safeCmd('strikeThrough')"><s>S</s></button><button class="b" onclick="safeCmd('superscript')">x²</button><button class="b" onclick="safeCmd('subscript')">x₂</button>
+<input class="color" id="fontColor" type="color" value="#202124" title="Text color"><input class="color" id="highlight" type="color" value="#fff59d" title="Highlight">
+<button class="b" onclick="clearFormatting()">Clear</button><span class="gt">Font</span></div>
+<div class="group"><select class="sel" onchange="setStyle(this.value);this.selectedIndex=0"><option>Styles</option><option value="p">Normal</option><option value="h1">Title</option><option value="h2">Heading 1</option><option value="h3">Heading 2</option><option value="h4">Heading 3</option><option value="blockquote">Quote</option></select><button class="b" onclick="safeCmd('insertUnorderedList')">• Bullets</button><button class="b" onclick="safeCmd('insertOrderedList')">1. Number</button><button class="b" onclick="safeCmd('outdent')">⇤</button><button class="b" onclick="safeCmd('indent')">⇥</button><button class="b" onclick="safeCmd('justifyLeft')">L</button><button class="b" onclick="safeCmd('justifyCenter')">C</button><button class="b" onclick="safeCmd('justifyRight')">R</button><button class="b" onclick="safeCmd('justifyFull')">J</button><span class="gt">Paragraph</span></div>
+<div class="group"><button class="b" onclick="lineSpacing(1)">1.0</button><button class="b" onclick="lineSpacing(1.15)">1.15</button><button class="b" onclick="lineSpacing(1.5)">1.5</button><button class="b" onclick="lineSpacing(2)">2.0</button><button class="b" onclick="paragraphDialog()">¶ Spacing</button><button class="b" onclick="insertHorizontalRule()">― Line</button><span class="gt">Spacing</span></div>
+<div class="group"><button class="b big" onclick="copyImage()"><span class="sym">🖼️</span>Copy Image</button><button class="b big" onclick="shareImage()"><span class="sym">📤</span>Share Image</button><button class="b big" onclick="downloadPNG()"><span class="sym">⬇️</span>PNG</button><button class="b big" onclick="downloadPDF()"><span class="sym">📕</span>PDF</button><span class="gt">Export</span></div>
+</div>
+
+<div id="insert" class="row hidden">
+<div class="group"><button class="b big" onclick="insertTable()"><span class="sym">▦</span>Table</button><button class="b big" onclick="document.getElementById('imgInput').click()"><span class="sym">🖼</span>Picture</button><button class="b big" onclick="insertLink()"><span class="sym">🔗</span>Link</button><span class="gt">Pages</span></div>
+<div class="group"><button class="b" onclick="insertEmoji()">😀 Emoji</button><button class="b" onclick="insertSymbol()">Ω Symbol</button><button class="b" onclick="insertDate()">Date/Time</button><button class="b" onclick="insertTextBox()">▣ Text Box</button><button class="b" onclick="insertPageBreak()">↵ Page Break</button><span class="gt">Text</span></div>
+<div class="group"><button class="b" onclick="insertTOC()">☷ Automatic TOC</button><button class="b" onclick="insertHeader()">Header</button><button class="b" onclick="insertFooter()">Footer</button><button class="b" onclick="insertPageNumber()">Page Number</button><span class="gt">Document</span></div>
+</div>
+
+<div id="design" class="row hidden">
+<div class="group"><button class="b" onclick="theme('clean')">Clean</button><button class="b" onclick="theme('lined')">Lined</button><button class="b" onclick="theme('grid')">Grid</button><button class="b" onclick="theme('cornell')">Cornell</button><button class="b" onclick="theme('exam')">Exam</button><button class="b" onclick="theme('soft')">Soft</button><button class="b" onclick="theme('dark')">Dark</button><span class="gt">Templates</span></div>
+<div class="group"><button class="b" onclick="paperColor('#fff')">White</button><button class="b" onclick="paperColor('#fff9e6')">Cream</button><button class="b" onclick="paperColor('#eef7ff')">Blue</button><button class="b" onclick="paperColor('#f5efff')">Lavender</button><button class="b" onclick="paperColor('#eef9ef')">Green</button><button class="b" onclick="paperColor('#fff0f4')">Rose</button><button class="b" onclick="customPaperColor()">More</button><span class="gt">Page Color</span></div>
+<div class="group"><button class="b" onclick="border('1px solid #888')">Thin</button><button class="b" onclick="border('3px double #185abd')">Double</button><button class="b" onclick="border('2px dashed #888')">Dashed</button><button class="b" onclick="border('0')">None</button><button class="b" onclick="gradient()">Gradient</button><button class="b" onclick="watermark()">Watermark</button><span class="gt">Page Background</span></div>
+</div>
+
+<div id="layout" class="row hidden">
+<div class="group"><button class="b" onclick="sizePage('a4')">A4</button><button class="b" onclick="sizePage('letter')">Letter</button><button class="b" onclick="sizePage('whatsapp')">WhatsApp</button><button class="b" onclick="waSize(1080,1920)">1080×1920</button><button class="b" onclick="waSize(1080,1350)">1080×1350</button><span class="gt">Size</span></div>
+<div class="group"><button class="b" onclick="orientation('portrait')">Portrait</button><button class="b" onclick="orientation('landscape')">Landscape</button><button class="b" onclick="orientation('square')">Square</button><span class="gt">Orientation</span></div>
+<div class="group"><button class="b" onclick="margin(40)">Narrow</button><button class="b" onclick="margin(82)">Normal</button><button class="b" onclick="margin(120)">Wide</button><button class="b" onclick="customMargins()">Custom</button><span class="gt">Margins</span></div>
+<div class="group"><button class="b" onclick="columns(1)">1 Column</button><button class="b" onclick="columns(2)">2 Columns</button><button class="b" onclick="columns(3)">3 Columns</button><span class="gt">Columns</span></div>
+</div>
+
+<div id="review" class="row hidden">
+<div class="group"><button class="b big" onclick="findText()"><span class="sym">🔎</span>Find</button><button class="b big" onclick="replaceText()"><span class="sym">🔁</span>Replace</button><button class="b" onclick="wordCount()">Word Count</button><button class="b" onclick="selectAllText()">Select All</button><span class="gt">Proofing</span></div>
+<div class="group"><button class="b" onclick="comment()">💬 Comment</button><button class="b" onclick="spell()">ABC✓ Spelling</button><button class="b" onclick="language()">Language</button><span class="gt">Review</span></div>
+</div>
+
+<div id="view" class="row hidden">
+<div class="group"><button class="b" onclick="zoom(-10)">−</button><button class="b" onclick="zoom(10)">＋</button><button class="b" onclick="zoomReset()">100%</button><button class="b" onclick="fullscreen()">⛶ Full Screen</button><span class="gt">Zoom</span></div>
+<div class="group"><button class="b" onclick="toggleRuler()">Ruler</button><button class="b" onclick="toggleMarks()">¶ Marks</button><button class="b" onclick="focusMode()">Focus Mode</button><span class="gt">View</span></div>
+</div>
+</div>
+
+<div id="ruler" class="ruler"></div>
+<main class="workspace"><article class="paper" id="paper"><div class="editor" id="editor" contenteditable="true" spellcheck="true"><h1>My Notes / నా నోట్స్</h1><p>Select text and use the <b>font, size, colour, highlight and style</b> controls above.</p><h2>Topic Heading</h2><ul><li>Telugu + English supported</li><li>Word-style formatting</li><li>Use Design for colourful note templates</li></ul></div></article></main>
+<input id="imgInput" type="file" accept="image/*" class="hidden">
+<div class="footer"><span id="status">Ready</span><span id="words">Words: 0</span><span id="chars">Characters: 0</span><span class="r" id="zoomText">100%</span></div>
+
+<script>
+const editor=document.getElementById('editor'),paper=document.getElementById('paper');
+let savedRange=null,zoomLevel=100;
+
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.querySelectorAll('.ribbon>.row').forEach(x=>x.classList.add('hidden'));document.getElementById(t.dataset.tab).classList.remove('hidden')});
+
+
+editor.addEventListener('dragover',e=>{if([...e.dataTransfer.items].some(i=>i.type.startsWith('image/'))){e.preventDefault();editor.style.outline='2px dashed #185abd'}});
+editor.addEventListener('dragleave',()=>editor.style.outline='');
+editor.addEventListener('drop',e=>{
+  const files=[...e.dataTransfer.files].filter(f=>f.type.startsWith('image/'));
+  if(!files.length)return;
+  e.preventDefault();editor.style.outline='';
+  files.forEach(f=>{const r=new FileReader();r.onload=()=>safeCmd('insertHTML','<img src="'+r.result+'" alt="Dropped image">');r.readAsDataURL(f)});
+});
+function saveSelection(){const s=getSelection();if(s&&s.rangeCount&&editor.contains(s.anchorNode))savedRange=s.getRangeAt(0).cloneRange()}
+function restoreSelection(){if(!savedRange)return false;const s=getSelection();s.removeAllRanges();s.addRange(savedRange);return true}
+document.addEventListener('selectionchange',()=>{const s=getSelection();if(s&&s.rangeCount&&editor.contains(s.anchorNode))savedRange=s.getRangeAt(0).cloneRange()});
+editor.addEventListener('mouseup',saveSelection);editor.addEventListener('keyup',saveSelection);
+
+function status(x){document.getElementById('status').textContent=x;setTimeout(()=>document.getElementById('status').textContent='Ready',1800)}
+function update(){let t=editor.innerText.trim();document.getElementById('words').textContent='Words: '+(t?t.split(/\s+/).length:0);document.getElementById('chars').textContent='Characters: '+t.length}
+editor.addEventListener('input',()=>{update();saveSelection();localStorage.setItem('teluguNotesAutosave',editor.innerHTML)});update();
+
+function safeCmd(c,v=null){restoreSelection();editor.focus();document.execCommand(c,false,v);saveSelection();update()}
+function setStyle(v){if(!v)return;restoreSelection();editor.focus();document.execCommand('formatBlock',false,v);saveSelection();update();status(v==='h1'?'Title style applied':v==='h2'?'Heading 1 applied':v==='h3'?'Heading 2 applied':'Style applied')}
+
+function unwrapRange(range){
+  const frag=range.cloneContents(); return frag;
+}
+function wrapSelected(style){
+  restoreSelection();const s=getSelection();if(!s||!s.rangeCount||s.isCollapsed){status('Select text first');return false}
+  const r=s.getRangeAt(0);if(!editor.contains(r.commonAncestorContainer)){return false}
+  const span=document.createElement('span');Object.assign(span.style,style);
+  try{span.appendChild(r.extractContents());r.insertNode(span);s.removeAllRanges();const nr=document.createRange();nr.selectNodeContents(span);s.addRange(nr);savedRange=nr.cloneRange();update();return true}catch(e){return false}
+}
+function setSize(v){if(!v)return;wrapSelected({fontSize:v});status('Font size '+v)}
+function setFont(v){if(!v)return;wrapSelected({fontFamily:'"'+v+'"'});status('Font: '+v)}
+document.getElementById('fontColor').addEventListener('input',e=>{wrapSelected({color:e.target.value});status('Text colour applied')});
+document.getElementById('highlight').addEventListener('input',e=>{wrapSelected({backgroundColor:e.target.value});status('Highlight applied')});
+
+function clearFormatting(){restoreSelection();document.execCommand('removeFormat',false,null);document.execCommand('formatBlock',false,'p');saveSelection();update()}
+function lineSpacing(v){restoreSelection();let s=getSelection();let n=s&&s.rangeCount?s.anchorNode:null;if(n&&n.nodeType===3)n=n.parentElement;let block=n?.closest?.('p,h1,h2,h3,h4,li,blockquote');if(block&&editor.contains(block))block.style.lineHeight=v;else editor.style.lineHeight=v;status('Line spacing '+v)}
+function paragraphDialog(){const a=prompt('Space Before (px)','0'),b=prompt('Space After (px)','10'),l=prompt('Line spacing (1 / 1.15 / 1.5 / 2)','1.15');if(a===null||b===null||l===null)return;editor.querySelectorAll('p,h1,h2,h3,h4,li,blockquote').forEach(n=>{n.style.marginTop=a+'px';n.style.marginBottom=b+'px';n.style.lineHeight=l});status('Paragraph spacing applied')}
+function insertHorizontalRule(){safeCmd('insertHorizontalRule')}
+
+function newDoc(){if(confirm('Start a new document?')){editor.innerHTML='<h1>My Notes / నా నోట్స్</h1><p></p>';document.getElementById('docName').textContent='Untitled Document';update()}}
+function saveDoc(){localStorage.setItem('teluguNotesDoc',JSON.stringify({html:editor.innerHTML,style:paper.getAttribute('style')||'',cls:paper.className,name:document.getElementById('docName').textContent}));status('Saved in this browser')}
+function openDoc(){const d=JSON.parse(localStorage.getItem('teluguNotesDoc')||'null');if(!d){alert('No saved document found');return}editor.innerHTML=d.html;paper.setAttribute('style',d.style||'');paper.className=d.cls||'paper';document.getElementById('docName').textContent=d.name||'Telugu Notes Document';update();status('Opened saved document')}
+function printDoc(){window.print()}
+async function pastePlain(){try{const t=await navigator.clipboard.readText();restoreSelection();editor.focus();document.execCommand('insertText',false,t);update()}catch(e){alert('Paste permission blocked. Use Ctrl/Cmd+V.')}}
+
+function insertTable(){let r=+prompt('Rows','4'),c=+prompt('Columns','3');if(!r||!c)return;let h='<table><tbody>';for(let i=0;i<r;i++){h+='<tr>';for(let j=0;j<c;j++)h+=(i===0?'<th>Heading</th>':'<td>Text</td>');h+='</tr>'}h+='</tbody></table>';safeCmd('insertHTML',h)}
+function insertLink(){const u=prompt('URL','https://');if(u)safeCmd('createLink',u)}
+function insertEmoji(){const x=prompt('Emoji','📌');if(x)safeCmd('insertText',x)}
+function insertSymbol(){const x=prompt('Symbol','→ ✓ ★ ₹ © • §');if(x)safeCmd('insertText',x)}
+function insertDate(){safeCmd('insertText',new Date().toLocaleString())}
+function insertTextBox(){safeCmd('insertHTML','<div style="border:2px solid #185abd;border-radius:8px;padding:12px;margin:10px 0;background:#f5f8ff">Text Box</div>')}
+function insertPageBreak(){safeCmd('insertHTML','<div style="break-after:page;height:1px;border-top:2px dashed #aaa;margin:20px 0"></div>')}
+document.getElementById('imgInput').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>safeCmd('insertHTML','<img src="'+rd.result+'" alt="Image">');rd.readAsDataURL(f);e.target.value=''}
+
+function insertTOC(){const hs=[...editor.querySelectorAll('h1,h2,h3')];if(!hs.length){alert('Add headings first.');return}let x='<div style="border:1px solid #bbb;padding:12px;margin:10px 0"><b>Table of Contents</b><ol>';hs.forEach((h,i)=>{h.id='toc'+i;x+='<li style="margin-left:'+(h.tagName==='H3'?25:h.tagName==='H2'?10:0)+'px"><a href="#toc'+i+'">'+h.innerText+'</a></li>'});x+='</ol></div>';safeCmd('insertHTML',x)}
+function insertHeader(){if(!paper.querySelector('.hdr')){let d=document.createElement('div');d.className='hdr';d.contentEditable=true;d.style.cssText='position:absolute;top:15px;left:60px;right:60px;border-bottom:1px dashed #aaa;padding:5px';d.textContent='Header';paper.appendChild(d)}}
+function insertFooter(){if(!paper.querySelector('.ftr')){let d=document.createElement('div');d.className='ftr';d.contentEditable=true;d.style.cssText='position:absolute;bottom:15px;left:60px;right:60px;border-top:1px dashed #aaa;padding:5px;text-align:center';d.textContent='Footer';paper.appendChild(d)}}
+function insertPageNumber(){insertFooter();paper.querySelector('.ftr').innerHTML='Page 1'}
+
+function theme(t){paper.className='paper'+(t==='clean'?'':' '+t);if(t==='dark')editor.style.color='#f1f3f4';else editor.style.color='';status(t+' template')}
+function paperColor(c){paper.style.backgroundColor=c}
+function customPaperColor(){const c=prompt('Page colour','#ffffff');if(c)paper.style.backgroundColor=c}
+function border(v){paper.style.border=v}
+function gradient(){const a=prompt('First colour','#ffffff'),b=prompt('Second colour','#eaf2ff');if(a&&b)paper.style.background='linear-gradient(135deg,'+a+','+b+')'}
+function watermark(){let x=paper.querySelector('.wm');if(x){x.remove();return}const t=prompt('Watermark text','NOTES');if(!t)return;x=document.createElement('div');x.className='wm';x.textContent=t;x.style.cssText='position:absolute;left:0;right:0;top:45%;text-align:center;transform:rotate(-30deg);font-size:70px;font-weight:800;color:#0001;pointer-events:none';paper.appendChild(x)}
+
+function sizePage(s){if(s==='a4'){paper.style.width='794px';paper.style.minHeight='1123px'}else if(s==='letter'){paper.style.width='816px';paper.style.minHeight='1056px'}else{paper.style.width='900px';paper.style.minHeight='900px'}status(s.toUpperCase()+' size')}
+function waSize(w,h){paper.style.width=w+'px';paper.style.minHeight=h+'px';paper.style.padding='70px';status('WhatsApp '+w+'×'+h)}
+function orientation(o){if(o==='portrait'){paper.style.width='794px';paper.style.minHeight='1123px'}if(o==='landscape'){paper.style.width='1123px';paper.style.minHeight='794px'}if(o==='square'){paper.style.width='900px';paper.style.minHeight='900px'}status(o)}
+function margin(x){paper.style.padding=x+'px';status('Margins changed')}
+function customMargins(){const t=prompt('Top px','76'),r=prompt('Right px','82'),b=prompt('Bottom px','76'),l=prompt('Left px','82');if([t,r,b,l].some(x=>x===null))return;paper.style.padding=t+'px '+r+'px '+b+'px '+l+'px'}
+function columns(n){editor.style.columnCount=n;editor.style.columnGap=n>1?'32px':'0';status(n+' column(s)')}
+
+function findText(){const q=prompt('Find text');if(q&&window.find)status(window.find(q)?'Found':'Not found')}
+function replaceText(){const a=prompt('Find',''),b=prompt('Replace with','');if(!a)return;const w=document.createTreeWalker(editor,NodeFilter.SHOW_TEXT),nodes=[];while(w.nextNode())nodes.push(w.currentNode);let n=0;nodes.forEach(x=>{if(x.nodeValue.includes(a)){n+=(x.nodeValue.split(a).length-1);x.nodeValue=x.nodeValue.split(a).join(b)}});update();alert('Replaced '+n+' occurrence(s)')}
+function wordCount(){update();alert(document.getElementById('words').textContent+'\\n'+document.getElementById('chars').textContent)}
+function selectAllText(){editor.focus();document.execCommand('selectAll')}
+function comment(){const x=prompt('Comment');if(x)safeCmd('insertHTML','<span title="'+x.replace(/"/g,'&quot;')+'" style="background:#fff2cc;border-bottom:2px dotted #e0a000">'+(getSelection().toString()||'[comment]')+'</span>')}
+function spell(){alert('Chrome spellcheck is enabled. Telugu dictionary availability depends on your device/browser.')}
+function language(){alert('Use your browser/device language settings for Telugu or English proofing.')}
+function zoom(n){zoomLevel=Math.max(60,Math.min(160,zoomLevel+n));paper.style.transform='scale('+zoomLevel/100+')';paper.style.transformOrigin='top center';document.getElementById('zoomText').textContent=zoomLevel+'%'}
+function zoomReset(){zoomLevel=100;paper.style.transform='scale(1)';document.getElementById('zoomText').textContent='100%'}
+function fullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.()}
+function toggleRuler(){const r=document.getElementById('ruler');r.style.display=r.style.display==='block'?'none':'block'}
+function toggleMarks(){document.body.classList.toggle('marks')}
+function focusMode(){document.body.classList.toggle('focus')}
+
+async function loadCanvasLibrary(){
+  if(window.html2canvas) return true;
+  try{
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+    await new Promise((resolve,reject)=>{s.onload=resolve;s.onerror=reject;document.head.appendChild(s)});
+    return !!window.html2canvas;
+  }catch(e){return false}
+}
+
+function nextPaint(){return new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))}
+
+async function canvasImage(){
+  if(document.fonts && document.fonts.ready) await document.fonts.ready;
+  await nextPaint();
+
+  // First try html2canvas when available.
+  const loaded=await loadCanvasLibrary();
+  if(loaded){
+    const clone=paper.cloneNode(true);
+    clone.id='exportPaper';
+    clone.style.position='absolute';
+    clone.style.left='0'; clone.style.top='0';
+    clone.style.margin='0'; clone.style.transform='none'; clone.style.boxShadow='none';
+    clone.style.maxWidth='none'; clone.style.width=getComputedStyle(paper).width;
+    clone.style.height='auto'; clone.style.minHeight=getComputedStyle(paper).minHeight;
+    clone.style.background=getComputedStyle(paper).background;
+    clone.style.color=getComputedStyle(paper).color;
+    clone.style.visibility='visible'; clone.style.pointerEvents='none';
+    const holder=document.createElement('div');
+    holder.style.cssText='position:fixed;left:-20000px;top:0;width:'+getComputedStyle(paper).width+';background:white;z-index:-1;';
+    holder.appendChild(clone); document.body.appendChild(holder);
+    try{
+      return await html2canvas(clone,{scale:2,useCORS:true,allowTaint:false,backgroundColor:null,logging:false,imageTimeout:20000,removeContainer:true});
+    }catch(e){ console.warn('html2canvas failed, using SVG fallback',e); }
+    finally{holder.remove()}
+  }
+
+  // Reliable browser-native fallback: serialize the page into an SVG foreignObject.
+  const rect=paper.getBoundingClientRect();
+  const w=Math.ceil(paper.scrollWidth || rect.width);
+  const h=Math.ceil(paper.scrollHeight || rect.height);
+  const copy=paper.cloneNode(true);
+  copy.style.transform='none'; copy.style.margin='0'; copy.style.boxShadow='none';
+  copy.style.width=w+'px'; copy.style.height=h+'px'; copy.style.maxWidth='none';
+  const css=[...document.styleSheets].map(sh=>{try{return [...sh.cssRules].map(r=>r.cssText).join('')}catch(e){return ''}}).join('');
+  const svg='<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="'+w+'" height="'+h+'"><foreignObject width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml"><style>'+css+'</style>'+copy.outerHTML+'</div></foreignObject></svg>';
+  const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  try{
+    const img=new Image();
+    await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url});
+    const c=document.createElement('canvas'); c.width=w*2; c.height=h*2;
+    const ctx=c.getContext('2d'); ctx.scale(2,2); ctx.drawImage(img,0,0);
+    return c;
+  }finally{URL.revokeObjectURL(url)}
+}
+
+function canvasToBlob(canvas){
+  return new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('PNG creation failed')),'image/png',1));
+}
+function downloadBlob(blob,name){
+  const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);
+}
+function openImageForCopy(blob){
+  const u=URL.createObjectURL(blob),w=window.open('','_blank');
+  if(!w){downloadBlob(blob,'WhatsApp_Notes.png');alert('The image was saved as PNG. Open it and use Copy/Share.');return}
+  w.document.write('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Copy Notes Image</title><style>body{margin:0;background:#222;text-align:center;padding:12px;font-family:Arial}img{max-width:100%;height:auto;background:#fff}.hint{position:fixed;left:10px;right:10px;bottom:10px;background:#fff;padding:12px;border-radius:10px}</style></head><body><img id="i"><div class="hint">Press and hold the image → Copy or Share → WhatsApp</div></body></html>');
+  w.document.close(); w.document.getElementById('i').src=u;
+  setTimeout(()=>URL.revokeObjectURL(u),60000);
+}
+async function shareImage(){
+  status('Creating image…');
+  try{
+    const blob=await canvasToBlob(await canvasImage());
+    const file=new File([blob],'Telugu_Notes.png',{type:'image/png'});
+    if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
+      await navigator.share({files:[file],title:'Telugu Notes'}); status('✓ Share sheet opened'); return;
+    }
+    openImageForCopy(blob); status('Image opened');
+  }catch(e){if(e.name!=='AbortError')alert('Could not create/share the image. Please try again.');status('Share cancelled/failed')}
+}
+async function copyImage(){
+  status('Creating image…');
+  try{
+    const blob=await canvasToBlob(await canvasImage());
+    if(navigator.clipboard && window.ClipboardItem && window.isSecureContext){
+      try{
+        await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+        status('✓ Image copied'); alert('✓ Image copied. Open WhatsApp and paste it.'); return;
+      }catch(e){console.warn('Clipboard write unavailable',e)}
+    }
+    openImageForCopy(blob); status('Image opened — long-press Copy/Share');
+  }catch(e){console.error(e);alert('Could not create the image. If this is a local HTML file, use Share Image or PNG.');status('Image creation failed')}
+}
+async function downloadPNG(){
+  status('Creating PNG…');
+  try{downloadBlob(await canvasToBlob(await canvasImage()),'Telugu_Notes.png');status('✓ PNG downloaded')}
+  catch(e){alert('Could not create PNG. Please try again.');status('PNG export failed')}
+}
+
+function downloadPDF(){
+  document.title=(document.getElementById('docName').textContent||'Telugu_Notes');
+  window.print();
+}
+
+document.addEventListener('keydown',e=>{if(!(e.ctrlKey||e.metaKey))return;const k=e.key.toLowerCase();if(k==='s'){e.preventDefault();saveDoc()}else if(k==='b'){e.preventDefault();safeCmd('bold')}else if(k==='i'){e.preventDefault();safeCmd('italic')}else if(k==='u'){e.preventDefault();safeCmd('underline')}else if(k==='z'){e.preventDefault();safeCmd('undo')}else if(k==='y'){e.preventDefault();safeCmd('redo') }});
+</script>
+</body>
+</html>

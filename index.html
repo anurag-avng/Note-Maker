@@ -18,6 +18,28 @@ button,select,input{font:inherit}button{cursor:pointer}.top{height:48px;backgrou
 @media(max-width:650px){.workspace{justify-content:flex-start;overflow-x:auto}.paper{padding:45px 24px;min-height:900px;margin:0 auto}.page-landscape{transform-origin:top left}.page-square{transform-origin:top left}.editor{min-height:800px}.tab{padding:9px 11px}.b.big{min-width:48px}}
 @media print{@page{size:A4;margin:0}body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.top,.tabs,.ribbon,.footer,.ruler{display:none!important}.workspace{padding:0}.paper{width:100%;min-height:auto;box-shadow:none;margin:0;padding:76px 82px;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
+
+<style id="whatsapp-upgrade">
+.paper{box-sizing:border-box;padding:144px !important;min-height:1123px;}
+.paper.landscape{min-height:794px;}
+.paper.square{min-height:1080px;}
+.paper[data-size="whatsapp"]{width:1080px;min-height:1920px;padding:144px !important;}
+.paper img{max-width:100%;height:auto;}
+.paper,.editor{overflow-wrap:anywhere;}
+.paper{font-family:"Noto Sans Telugu","Noto Sans",Arial,sans-serif;line-height:1.55;}
+.paper h1,.paper h2,.paper h3{line-height:1.2;margin-top:.6em;margin-bottom:.35em;}
+.paper ul,.paper ol{padding-left:1.5em;margin:.45em 0;}
+.paper table{width:100%;border-collapse:collapse;margin:.7em 0;font-size:.95em;}
+.paper td,.paper th{border:1px solid #aaa;padding:10px;vertical-align:top;}
+@media(max-width:900px){.paper{padding:72px !important;}}
+</style>
+<script>
+(function(){
+const T={birthday:`<h1 style="text-align:center">🎂 Happy Birthday! 🎉</h1><p style="text-align:center">Wishing you a wonderful birthday filled with happiness, love and beautiful memories.</p><ul><li>Stay happy 😊</li><li>Keep smiling 🌸</li><li>May all your dreams come true ✨</li></ul>`,marriage:`<h1 style="text-align:center">💐 Happy Marriage Day! 💍</h1><p style="text-align:center">Wishing you both a lifetime of love, togetherness and happiness.</p><p><b>💖 With warm wishes for many more beautiful years together!</b></p>`,congratulations:`<h1 style="text-align:center">🎉 Congratulations! 🏆</h1><p style="text-align:center">Your hard work and dedication have paid off. Wishing you continued success!</p><ul><li>Be proud of this achievement.</li><li>Keep reaching higher.</li><li>More success is ahead!</li></ul>`,bulletnotes:`<h2>📚 Important Notes</h2><ul><li><b>Key Point:</b> Write the main concept here.</li><li><b>Example:</b> Add a short example.</li><li><b>Remember:</b> Add an exam-focused fact.</li></ul>`,tableblue:`<h2>📊 Quick Revision Table</h2><table><tr><th>Topic</th><th>Key Point</th><th>Example</th></tr><tr><td>Concept 1</td><td>Main point</td><td>Example</td></tr><tr><td>Concept 2</td><td>Main point</td><td>Example</td></tr></table>`,tableclean:`<h2>📝 Comparison Table</h2><table><tr><th>Feature</th><th>Before</th><th>After</th></tr><tr><td>Point 1</td><td>Details</td><td>Details</td></tr><tr><td>Point 2</td><td>Details</td><td>Details</td></tr></table>`,exam:`<h1>🎯 Exam Notes</h1><h3>Definition</h3><p>Write the precise definition.</p><h3>Key Points</h3><ol><li>First important point</li><li>Second important point</li><li>Third important point</li></ol><h3>Quick Recall</h3><p><b>⭐ Remember:</b> Add the one-line fact.</p>`};
+window.insertWATemplate=function(n){const e=document.querySelector('[contenteditable="true"]');if(e&&T[n]){e.innerHTML=T[n];e.dispatchEvent(new Event('input',{bubbles:true}));e.focus();}};
+window.addEventListener('DOMContentLoaded',()=>{const r=document.querySelector('.ribbon')||document.querySelector('header');if(!r||document.getElementById('waTemplates'))return;const b=document.createElement('div');b.id='waTemplates';b.style='display:flex;gap:6px;flex-wrap:wrap;padding:8px;background:#f7f7f7;border-bottom:1px solid #ddd';b.innerHTML='<b>WhatsApp Templates:</b><button onclick="insertWATemplate('birthday')">🎂 Birthday</button><button onclick="insertWATemplate('marriage')">💍 Marriage Day</button><button onclick="insertWATemplate('congratulations')">🎉 Congratulations</button><button onclick="insertWATemplate('bulletnotes')">• Bullet Notes</button><button onclick="insertWATemplate('tableblue')">📊 Table Style</button><button onclick="insertWATemplate('tableclean')">▦ Clean Table</button><button onclick="insertWATemplate('exam')">🎯 Exam Notes</button>';r.parentNode.insertBefore(b,r.nextSibling);});
+})();
+</script>
 </head>
 <body>
 <div class="top"><div class="logo">W</div><div class="name" id="docName">Telugu Notes Document</div><div class="topright"><button class="ico" onclick="newDoc()">＋</button><button class="ico" onclick="saveDoc()">💾</button><button class="ico" onclick="printDoc()">🖨️</button></div></div>
@@ -72,7 +94,7 @@ button,select,input{font:inherit}button{cursor:pointer}.top{height:48px;backgrou
 </div>
 
 <div id="ruler" class="ruler"></div>
-<main class="workspace"><article class="paper" id="paper"><div class="editor" id="editor" contenteditable="true" spellcheck="true"><h1>My Notes / నా నోట్స్</h1><p>Select text and use the <b>font, size, colour, highlight and style</b> controls above.</p><h2>Topic Heading</h2><ul><li>Telugu + English supported</li><li>Word-style formatting</li><li>Use Design for colourful note templates</li></ul></div></article></main>
+<main class="workspace"><article class="paper" id="paper"><div class="editor" id="editor" contenteditable="true" spellcheck="true"></div></article></main>
 <input id="imgInput" type="file" accept="image/*" class="hidden">
 <div class="footer"><span id="status">Ready</span><span id="words">Words: 0</span><span id="chars">Characters: 0</span><span class="r" id="zoomText">100%</span></div>
 
